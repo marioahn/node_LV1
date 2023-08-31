@@ -16,16 +16,8 @@ app.use((req, _, next) => { // 로그확인용 미들웨어 -> insomnia에서 ap
   next();
 });
 
-
-const router = express.Router(); 
-router.get('/', (_, res) => { 
-  return res.json({ message: 'Hi!' }); 
-});
-
 app.use('/', indexRouter);
 
 app.listen(PORT, () => {
   console.log(PORT, '포트로 서버가 열렸어요!');
 });
-
-// *미들웨어 순서 괜찮나..? api는 당연히 다 작동

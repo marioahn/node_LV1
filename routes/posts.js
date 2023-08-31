@@ -15,7 +15,10 @@ router.post('/', async (req,res) => {
     await Post.create({ user, password, title, content });
     return res.status(201).json({ message: `${user}의 게시글을 생성하였습니다` });
   }
-  catch (err) { console.error(err) };
+  catch (err) {
+    console.error(err);
+    return res.status(500).json({ errorMessage: '서버에러입니다' });
+  };
 });
 
 
@@ -33,7 +36,10 @@ router.get('/', async (_,res) => {
     });
     return res.status(200).json({ data: newPosts })
   }
-  catch (err) { console.error(err) };
+  catch (err) { 
+    console.error(err);
+    return res.status(500).json({ errorMessage: '서버에러입니다' });
+  };
 });
 
 
@@ -44,20 +50,31 @@ router.get('/:_postId', async (req,res) => {
     if (!_postId) { return res.status(400).json({ message: '데이터 형식이 올바르지 않습니다' }) }
 
     // *첨에 find쓰고, 전체조회처럼 map으로 하려했는데, findOne쓰면 할 필요없을듯? -> 근데 how?
+      // 객체 구조분해 할당등의 방법은 전부 실패 (노션에 적어뒀음)
     const postOne = await Post.findOne({ _id: _postId }).exec(); // id맞는 것을 딱 1개 찾기
-    const newPost = [postOne].map((post) => { // postOne은 객체이므로 map x -> [postOne]
-      return { // map -> return필수
-        postId: post['_id'],
-        user: post['user'],
-        title: post['title'],
-        content: post['content'],
-        createdAt: post['createdAt']
-      };
-    });
+    // const newPost = [postOne].map((post) => { // postOne은 객체이므로 map x -> [postOne]
+    //   return { 
+        // postId: post['_id'],
+        // user: post['user'],
+        // title: post['title'],
+        // content: post['content'],
+        // createdAt: post['createdAt']
+    //   };
+    // });
+    const newPost = { // 한 개면 맵 안쓰고 이렇게 해도 되긴 함..
+      postId: postOne['_id'],
+      user: postOne['user'],
+      title: postOne['title'],
+      content: postOne['content'],
+      createdAt: postOne['createdAt']
+    }
 
-    return res.status(200).json({ data: newPost[0] })
+    return res.status(200).json({ data: newPost })
   }
-  catch (err) { console.error(err) };
+  catch (err) { 
+    console.error(err);
+    return res.status(500).json({ errorMessage: '서버에러입니다' });
+  };
 });
 
 
@@ -82,7 +99,10 @@ router.put('/:_postId', async (req,res) => {
     // *아래꺼 제대로 작동x
     if (!post) return res.status(404).json({ message: '게시글 조회에 실패하였습니다' });
   }
-  catch (err) { console.error(err) };
+  catch (err) {
+    console.error(err);
+    return res.status(500).json({ errorMessage: '서버에러입니다' });
+  };
 });
 
 
@@ -107,7 +127,10 @@ router.delete('/:_postId', async (req,res) => {
 
     return res.status(204).json({ message: '게시글을 삭제하였습니다' });
   } 
-  catch (err) { console.error(err) };
+  catch (err) {
+    console.error(err);
+    return res.status(500).json({ errorMessage: '서버에러입니다' });
+  };
 });
 
 

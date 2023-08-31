@@ -20,7 +20,10 @@ router.post('/:_postId/comments', async (req,res) => {
     await Comment.create({ _postId, user, password, content });
     return res.status(200).json({ message: '댓글을 생성하였습니다' });
   }
-  catch (err) { console.error(err) };
+  catch (err) {
+    console.error(err);
+    return res.status(500).json({ errorMessage: '서버에러입니다' });
+  };
 });
 
 
@@ -42,7 +45,10 @@ router.get('/:_postId/comments', async (req,res) => {
     
     res.status(200).json({ data: newComments });
   }
-  catch (err) { console.error(err) };
+  catch (err) {
+    console.error(err);
+    return res.status(500).json({ errorMessage: '서버에러입니다' });
+  };
 });
 
 
@@ -68,7 +74,10 @@ router.put('/:_postId/comments/:_commentId', async (req,res) => {
     await Comment.updateOne({ _id: _commentId }, { $set: { password, content }});
     return res.status(204).json({ message: '댓글을 수정하였습니다' });
   } 
-  catch (err) { console.error(err) };
+  catch (err) {
+    console.error(err);
+    return res.status(500).json({ errorMessage: '서버에러입니다' });
+  };
 });
 
 
@@ -93,7 +102,10 @@ router.delete('/:_postId/comments/:_commentId', async (req,res) => {
       return res.status(200).json({ message: '댓글을 삭제하였습니다' });
     } else return res.status(200).json({ message: '비번이 틀렸습니다' });
   }
-  catch (err) { console.error(err) };
+  catch (err) {
+    console.error(err);
+    return res.status(500).json({ errorMessage: '서버에러입니다' });
+  };
 });
 
 
